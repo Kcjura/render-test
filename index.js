@@ -25,6 +25,25 @@ let notes = [
     }
 ]
 
+app.put('/api/notes/:id', (request, response) => {
+  const id = request.params.id
+  const body = request.body
+
+  const note = notes.find(n => n.id === id)
+  if (!note) {
+    return response.status(404).end()
+  }
+
+  const updatedNote = {
+    ...note,
+    content: body.content ?? note.content,
+    important: body.important ?? note.important
+  }
+
+  notes = notes.map(n => n.id === id ? updatedNote : n)
+  response.json(updatedNote)
+})
+
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
 })
